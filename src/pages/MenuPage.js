@@ -17,8 +17,8 @@ import { useNavigate } from "react-router-dom"; // Import navigation hook
 export default function MenuPage() {
   const navigate = useNavigate(); // Hook for navigation
 
-  const handlePortScreenClick = (e) => {
-    navigate("/PortScreen"); // Redirect to Menu Page}
+  const handlePortScreenClick = () => {
+    navigate("/PortScreenChoice"); // Redirect to port screen coice page}
   };
 
   return (

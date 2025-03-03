@@ -1,7 +1,8 @@
 import "./App.css";
 import LogInPage from "./pages/LogInPage";
-import PortScreen from "./pages/PortScreen";
-import MenuPage from "./pages/MenuPage"
+import PortScreenChoice from "./pages/PortScreenChoice";
+import MenuPage from "./pages/MenuPage";
+import PortDisplay from "./pages/PortDisplay";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,8 +15,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LogInPage />} />
-        <Route path="/PortScreen" element={<PortScreen />} />
+        <Route path="/PortScreenChoice" element={<PortScreenChoice />} />
         <Route path="/MenuPage" element={<MenuPage />} />
+        <Route path="/PortDisplay" element={<PortDisplay />} />
       </Routes>
     </Router>
   );
