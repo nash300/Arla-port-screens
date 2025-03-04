@@ -17,12 +17,12 @@ export default function PortScreenChoice() {
   return (
     <div className="middle-container ">
       <div className="container ">
-        <div className="row g-5 ">
+        <div className="row g-3 ">
           {[...Array(nrOfPorts)].map((_, i) => (
-            <div key={i} className="col-lg-3 col-md-4 col-sm-6 d-flex ">
+            <div key={i} className="col-lg-2  d-flex ">
               {/* Entire Card is a Clickable Button */}
               <button
-                className="card port-card shadow-lg w-100 rounded-2  "
+                className="card port-card shadow-lg w-100 rounded-3 border-4 "
                 onClick={() => portClickHndler(i + 1)}
               >
                 <div className="card-body text-center ">
