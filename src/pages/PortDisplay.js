@@ -35,8 +35,7 @@ export default function PortDisplay() {
       const { data, error } = await supabase
         .from("Port_info")
         .select("*")
-        .eq("port_nr", portNumber)
-        .order("position", { ascending: true }); // Order results by position
+        .eq("port_nr", portNumber);
 
       if (error) {
         console.error("Supabase query error:", error);
@@ -129,7 +128,9 @@ export default function PortDisplay() {
                   key={index}
                   className="col shadow-lg bg-white rounded-3 border border-light d-flex align-items-center justify-content-center p-3"
                 >
-                  <RootNumber rootNr={item.root_nr} />{" "}
+                  <RootNumber rootNr={item.pos_left} />
+                  <RootNumber rootNr={item.pos_middle} />
+                  <RootNumber rootNr={item.pos_right} />
                   {/* Component to display root number */}
                 </div>
               ))

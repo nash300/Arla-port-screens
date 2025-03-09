@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
+import supabase from "../Utilities/supabase";
 
 export default function ChangeUpdatePage() {
   // State for form inputs
-  const [selectedNumber, setSelectedNumber] = useState("");
+  const [selectedPortNumber, setSelectedPortNumber] = useState("");
   const [leftRoute, setLeftRoute] = useState("");
   const [middleRoute, setMiddleRoute] = useState("");
   const [rightRoute, setRightRoute] = useState("");
@@ -16,6 +17,11 @@ export default function ChangeUpdatePage() {
   // Minute options (0 or 30 mins)
   const minuteOptions = [15, 30, 45];
 
+  // Summing up the number of hours and minutes into minutes
+  const minuteCounter = (selectedHours, selectedMinutes) => {
+    return 60 * parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10);
+  };
+
   // Handle text area change with character limit (30 characters)
   const handleTextChange = (e) => {
     if (e.target.value.length <= 30) {
@@ -24,16 +30,48 @@ export default function ChangeUpdatePage() {
   };
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Port Number:", selectedNumber);
-    console.log("Routes:", { leftRoute, middleRoute, rightRoute });
-    console.log("Message:", message);
-    console.log(
-      "Time Limit:",
-      selectedHours + " hours",
-      selectedMinutes + " minutes"
-    );
+
+    // Atleast 1 port selected?
+    if (!selectedPortNumber) {
+      alert("Välj ett portnummer!");
+    }
+
+    // Atleast 1 route number selected?
+    if (!(leftRoute || middleRoute || rightRoute)) {
+      alert("Välj minst ett ruttnummer!");
+    }
+
+    const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
+
+    // Insert data into Supabase
+    const { data, error } = await supabase.from("Port_info").insert([
+      {
+        port_nr: selectedPortNumber,
+        pos_left: leftRoute,
+        pos_middle: middleRoute,
+        pos_right: rightRoute,
+        time_limit: totalMinutes, // Store time in minutes
+        msg: message || null, // Allow null if message is empty
+      },
+    ]);
+    if (error) {
+      console.error("Fel vid insättning i databasen:", error);
+      alert("Ett fel uppstod vid uppdatering av databasen.");
+    } else {
+      alert("Data har lagts till framgångsrikt!");
+      console.log("Inlagt i databasen:", data);
+
+      // Reset form fields after successful submission
+      setSelectedPortNumber("");
+      setLeftRoute("");
+      setMiddleRoute("");
+      setRightRoute("");
+      setSelectedHours("");
+      setSelectedMinutes("");
+      setMessage("");
+    }
   };
 
   return (
@@ -65,8 +103,8 @@ export default function ChangeUpdatePage() {
               Välj portnumret:
             </label>
             <select
-              value={selectedNumber}
-              onChange={(e) => setSelectedNumber(e.target.value)}
+              value={selectedPortNumber}
+              onChange={(e) => setSelectedPortNumber(e.target.value)}
               className="form-select border border-success text-dark p-2 mx-auto"
               style={{ maxWidth: "300px", minWidth: "150px" }}
             >
