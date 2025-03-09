@@ -43,7 +43,34 @@ export default function ChangeUpdatePage() {
       alert("Välj minst ett ruttnummer!");
     }
 
-    const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
+      const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
+      
+
+// If there are old data, remove them before update
+     const { data: oldData, error: err } = await supabase
+       .from("Port_info")
+       .select("*")
+       .eq("port_nr", selectedPortNumber);
+
+     if (err) {
+       console.error("Error fetching data:", err);
+     } else if (oldData.length > 0) {
+       // Records found → Proceed to delete
+       const { error: deleteError } = await supabase
+         .from("Port_info")
+         .delete()
+         .eq("port_nr", selectedPortNumber);
+
+       if (deleteError) {
+         console.error("Error deleting records:", deleteError);
+       } else {
+         console.log("Records deleted successfully.");
+       }
+     } else {
+       console.log("No records found for port number:", selectedPortNumber);
+     }
+
+
 
     // Insert data into Supabase
     const { data, error } = await supabase.from("Port_info").insert([
