@@ -164,7 +164,7 @@ export default function ChangeUpdatePage() {
                 <input
                   type="text"
                   value={leftRoute}
-                  onChange={(e) => setLeftRoute(e.target.value)}
+                  onChange={(e) => setLeftRoute(e.target.value.toUpperCase())}
                   className="form-control border border-success text-dark text-center"
                 />
               </div>
@@ -177,7 +177,7 @@ export default function ChangeUpdatePage() {
                 <input
                   type="text"
                   value={middleRoute}
-                  onChange={(e) => setMiddleRoute(e.target.value)}
+                  onChange={(e) => setMiddleRoute(e.target.value.toUpperCase())}
                   className="form-control border border-success text-dark text-center"
                 />
               </div>
@@ -190,7 +190,7 @@ export default function ChangeUpdatePage() {
                 <input
                   type="text"
                   value={rightRoute}
-                  onChange={(e) => setRightRoute(e.target.value)}
+                  onChange={(e) => setRightRoute(e.target.value.toUpperCase())}
                   className="form-control border border-success text-dark text-center"
                 />
               </div>
