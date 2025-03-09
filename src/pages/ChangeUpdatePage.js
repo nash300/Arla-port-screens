@@ -9,18 +9,20 @@ export default function ChangeUpdatePage() {
   const [middleRoute, setMiddleRoute] = useState("");
   const [rightRoute, setRightRoute] = useState("");
   const [message, setMessage] = useState(""); // State for text area input
-  const [selectedHours, setSelectedHours] = useState(""); // Hours selection
-  const [selectedMinutes, setSelectedMinutes] = useState(""); // Minutes selection
+  const [selectedHours, setSelectedHours] = useState(1); // Hours selection
+  const [selectedMinutes, setSelectedMinutes] = useState(0); // Minutes selection
 
   // Generate hour options (0 - 5)
   const hourOptions = Array.from({ length: 6 }, (_, i) => i);
   // Minute options (0 or 30 mins)
-  const minuteOptions = [15, 30, 45];
+  const minuteOptions = [0, 1, 15, 30, 45];
 
   // Summing up the number of hours and minutes into minutes
   const minuteCounter = (selectedHours, selectedMinutes) => {
     return 60 * parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10);
   };
+
+  const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
 
   // Handle text area change with character limit (30 characters)
   const handleTextChange = (e) => {
@@ -36,41 +38,44 @@ export default function ChangeUpdatePage() {
     // Atleast 1 port selected?
     if (!selectedPortNumber) {
       alert("Välj ett portnummer!");
+      return;
     }
 
     // Atleast 1 route number selected?
     if (!(leftRoute || middleRoute || rightRoute)) {
       alert("Välj minst ett ruttnummer!");
+      return;
     }
 
-      const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
-      
+    // Atleast 1 route number selected?
+    if (totalMinutes <= 0) {
+      alert("Tidgräns kan inte vara 0!");
+      return;
+    }
 
-// If there are old data, remove them before update
-     const { data: oldData, error: err } = await supabase
-       .from("Port_info")
-       .select("*")
-       .eq("port_nr", selectedPortNumber);
+    // If there are old data, remove them before update
+    const { data: oldData, error: err } = await supabase
+      .from("Port_info")
+      .select("*")
+      .eq("port_nr", selectedPortNumber);
 
-     if (err) {
-       console.error("Error fetching data:", err);
-     } else if (oldData.length > 0) {
-       // Records found → Proceed to delete
-       const { error: deleteError } = await supabase
-         .from("Port_info")
-         .delete()
-         .eq("port_nr", selectedPortNumber);
+    if (err) {
+      console.error("Error fetching data:", err);
+    } else if (oldData.length > 0) {
+      // Records found → Proceed to delete
+      const { error: deleteError } = await supabase
+        .from("Port_info")
+        .delete()
+        .eq("port_nr", selectedPortNumber);
 
-       if (deleteError) {
-         console.error("Error deleting records:", deleteError);
-       } else {
-         console.log("Records deleted successfully.");
-       }
-     } else {
-       console.log("No records found for port number:", selectedPortNumber);
-     }
-
-
+      if (deleteError) {
+        console.error("Error deleting records:", deleteError);
+      } else {
+        console.log("Records deleted successfully.");
+      }
+    } else {
+      console.log("No records found for port number:", selectedPortNumber);
+    }
 
     // Insert data into Supabase
     const { data, error } = await supabase.from("Port_info").insert([
@@ -95,8 +100,8 @@ export default function ChangeUpdatePage() {
       setLeftRoute("");
       setMiddleRoute("");
       setRightRoute("");
-      setSelectedHours("");
-      setSelectedMinutes("");
+      setSelectedHours(1);
+      setSelectedMinutes(0);
       setMessage("");
     }
   };
@@ -205,7 +210,6 @@ export default function ChangeUpdatePage() {
                 className="form-select border border-success text-dark p-2"
                 style={{ maxWidth: "150px", minWidth: "100px" }}
               >
-                <option value="">Timmar</option>
                 {hourOptions.map((hour) => (
                   <option key={hour} value={hour}>
                     {hour} {hour === 1 ? "timme" : "timmar"}
@@ -220,7 +224,6 @@ export default function ChangeUpdatePage() {
                 className="form-select border border-success text-dark p-2"
                 style={{ maxWidth: "150px", minWidth: "100px" }}
               >
-                <option value="">Minuter</option>
                 {minuteOptions.map((minute) => (
                   <option key={minute} value={minute}>
                     {minute} min
