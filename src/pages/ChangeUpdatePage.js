@@ -236,7 +236,7 @@ export default function ChangeUpdatePage() {
           {/* Message Text Area */}
           <div className="mb-4 text-center border p-3 rounded">
             <label className="form-label fw-bold text-dark">
-              Ange ett meddelande (max 30 tecken):
+              Meddelande (max 30 tecken):
             </label>
             <textarea
               value={message}
