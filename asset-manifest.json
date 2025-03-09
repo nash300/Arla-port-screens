@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/my-app/static/css/main.ffaff226.css",
-    "main.js": "/my-app/static/js/main.38b98bbc.js",
-    "static/js/952.752e13e3.chunk.js": "/my-app/static/js/952.752e13e3.chunk.js",
-    "index.html": "/my-app/index.html",
-    "main.ffaff226.css.map": "/my-app/static/css/main.ffaff226.css.map",
-    "main.38b98bbc.js.map": "/my-app/static/js/main.38b98bbc.js.map",
-    "952.752e13e3.chunk.js.map": "/my-app/static/js/952.752e13e3.chunk.js.map"
+    "main.css": "/Arla-port-screens/static/css/main.ffaff226.css",
+    "main.js": "/Arla-port-screens/static/js/main.012ed153.js",
+    "static/js/952.752e13e3.chunk.js": "/Arla-port-screens/static/js/952.752e13e3.chunk.js",
+    "index.html": "/Arla-port-screens/index.html",
+    "main.ffaff226.css.map": "/Arla-port-screens/static/css/main.ffaff226.css.map",
+    "main.012ed153.js.map": "/Arla-port-screens/static/js/main.012ed153.js.map",
+    "952.752e13e3.chunk.js.map": "/Arla-port-screens/static/js/952.752e13e3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ffaff226.css",
-    "static/js/main.38b98bbc.js"
+    "static/js/main.012ed153.js"
   ]
 }
