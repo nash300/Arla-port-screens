@@ -21,6 +21,10 @@ export default function MenuPage() {
     navigate("/PortScreenChoice"); // Redirect to port screen coice page}
   };
 
+   const handleChangeUpdateClick = () => {
+     navigate("/ChangeUpdatePage"); // Redirect to port screen coice page}
+   };
+
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div
@@ -52,7 +56,7 @@ export default function MenuPage() {
               </button>
               <button
                 className="btn btn-success m-2"
-                onClick={handlePortScreenClick}
+                onClick={handleChangeUpdateClick}
               >
                 Ändra/Uppdatera
               </button>

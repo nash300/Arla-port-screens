@@ -2,28 +2,30 @@ import React from "react";
 
 const RootNumber = ({ rootNr }) => {
   return (
-    <div className="root-number">
-      <p> {rootNr}</p>
+    <div className="root-number bg-dark bg-gradient">
+      <p className="shiny-text">{rootNr}</p>
 
       <style>
         {`
+          /* Container */
           .root-number {
-            width: 100%; 
-            height: 80%;
+            width: 100%;
+            height: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20vh; /* Responsive large text */
+            font-size: 20vh; /* Large text */
             font-weight: bold;
-            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4); /* 3D Text Effect */
-            background: linear-gradient(145deg, #4CAF50, #388E3C); /* Green Gradient */
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2), /* Outer shadow */
-                        inset 2px 2px 25px rgba(1, 1, 1, 0.79), /* Inner shine */
-                        inset -10px -10px 50px rgba(0, 0, 0, 0.3); /* Inner shadow */
-            border-radius: 50px;
-            color: white;
-            padding: 20px;
             text-align: center;
+            border-radius: 5px 15px 5px 5px;
+            padding: 20px;
+          }
+
+          /* Improved Text Shadow Effect */
+          .shiny-text {
+            color: white;
+            text-shadow: 
+              -2px -2px 15px rgba(1, 0, 3, 0.91); /* Soft white edge glow */
           }
         `}
       </style>

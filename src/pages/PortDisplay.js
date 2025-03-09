@@ -1,57 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; // For receiving passed data
-import supabase from "../Utilities/supabase.js"; // Supabase client
-import RootNumber from "../components/RootNumber.js"; // Component to display root number
+import { useLocation } from "react-router-dom"; // Hook to access the passed data (port number)
+import supabase from "../Utilities/supabase.js"; // Supabase client for database queries
+import RootNumber from "../components/RootNumber.js"; // Component to display the root number
 
 export default function PortDisplay() {
-  const location = useLocation(); // Receiving passed data
-  const { portNr } = location.state || {}; // Retrieve port number
+  const location = useLocation();
+  const { portNr } = location.state || {}; // Retrieve port number from the previous page
 
-  // State for fetched data
+  // State to store port information
   const [portInfo, setPortInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true); // State for loading indicator
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
-  // Function to retrieve port info from Supabase
-  const retrieveInfo = async () => {
+  /**
+   * Fetches port information from Supabase based on the port number.
+   * If no data is found, it updates the state accordingly.
+   */
+  const fetchPortData = async () => {
     setLoading(true);
     setErrorMessage("");
 
     try {
-      console.log(`Fetching data for port_nr: ${portNr}`); // Debugging log
+      console.log(`Fetching data for port_nr: ${portNr}`);
 
-      // Convert portNr to an integer
+      // Convert port number to integer
       const portNumber = parseInt(portNr, 10);
       if (isNaN(portNumber)) {
-        console.error("Invalid port number:", portNr);
         setErrorMessage("Invalid port number.");
         setLoading(false);
         return;
       }
 
-      // Supabase Query
+      // Query Supabase for port data
       const { data, error } = await supabase
         .from("Port_info")
-        .select("*") // Select all columns
-        .eq("port_nr", portNumber) // Filter by port number
-        .order("position", { ascending: true }); // Sort data
+        .select("*")
+        .eq("port_nr", portNumber)
+        .order("position", { ascending: true }); // Order results by position
 
       if (error) {
         console.error("Supabase query error:", error);
         setErrorMessage("Error fetching port data.");
-        setLoading(false);
-        return;
-      }
+      } else {
+        console.log("Updated data received:", data);
+        setPortInfo(data.length > 0 ? data : null); // Update state with fetched data
 
-      if (!data || data.length === 0) {
-        console.warn(`No data found for port_nr: ${portNumber}`);
-        setErrorMessage(`No data available for Port ${portNumber}.`);
-        setLoading(false);
-        return;
+        // If no items have a message, ensure the message section disappears
+        if (!data.some((item) => item.msg)) {
+          setPortInfo((prev) => prev?.map((item) => ({ ...item, msg: null })));
+        }
       }
-
-      console.log("Retrieved data:", data);
-      setPortInfo(data); // Store fetched data
     } catch (error) {
       console.error("Unexpected error:", error);
       setErrorMessage("Failed to load port data.");
@@ -60,12 +58,32 @@ export default function PortDisplay() {
     }
   };
 
-  // Automatically run `retrieveInfo` when page loads
+  // Fetch port data when the component mounts or when portNr changes
   useEffect(() => {
     if (portNr) {
-      retrieveInfo();
+      fetchPortData();
     }
   }, [portNr]);
+
+  // Subscribe to real-time Supabase updates to listen for changes in the "Port_info" table
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime-ports") // Create a real-time channel
+      .on(
+        "postgres_changes", // Listen for any database changes
+        { event: "*", schema: "public", table: "Port_info" },
+        (payload) => {
+          console.log("Database change detected:", payload);
+          fetchPortData(); // Re-fetch latest data when changes occur
+        }
+      )
+      .subscribe();
+
+    // Cleanup function to unsubscribe when the component unmounts
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
     <div className="vh-100 d-flex flex-column">
@@ -90,29 +108,29 @@ export default function PortDisplay() {
         </div>
       </div>
 
-      {/* Middle Section */}
-      <div className="d-flex flex-grow-1 flex-column justify-content-center">
+      {/* Middle Section - Displays port information */}
+      <div className="d-flex flex-grow-1 justify-content-center">
         <div className="container-fluid h-100">
           <div className="row h-100 gap-2 justify-content-center">
             {loading ? (
+              // Show loading text while fetching data
               <div className="d-flex align-items-center justify-content-center w-100 h-100">
                 <p>Loading data...</p>
               </div>
-            ) : errorMessage ? (
-              <div className="d-flex align-items-center justify-content-center w-100 h-100">
-                <p className="text-danger">{errorMessage}</p>
-              </div>
-            ) : portInfo && portInfo.length === 0 ? (
+            ) : !portInfo ? (
+              // Show an image when no data is found
               <div className="d-flex align-items-center justify-content-center w-100 h-100">
                 <img src="/cow.png" alt="No data" className="img-fluid" />
               </div>
             ) : (
+              // Display each item in portInfo array
               portInfo.map((item, index) => (
                 <div
                   key={index}
                   className="col shadow-lg bg-white rounded-3 border border-light d-flex align-items-center justify-content-center p-3"
                 >
-                  <RootNumber rootNr={item.root_nr} />
+                  <RootNumber rootNr={item.root_nr} />{" "}
+                  {/* Component to display root number */}
                 </div>
               ))
             )}
@@ -120,7 +138,7 @@ export default function PortDisplay() {
         </div>
       </div>
 
-      {/* Bottom Section - Message Display */}
+      {/* Bottom Section - Message Display (only shown if any portInfo item has a message) */}
       {portInfo && portInfo.some((item) => item.msg !== null) && (
         <div
           className="bg-warning text-white d-flex align-items-center justify-content-center text-center position-relative"
@@ -132,14 +150,9 @@ export default function PortDisplay() {
               style={{ fontSize: "calc(6vh + 2vw)", whiteSpace: "nowrap" }}
             >
               {portInfo.find((item) => item.msg)?.msg}
+              {/* Show first message found */}
             </h1>
           </div>
-          <img
-            src="/running-cow.gif"
-            alt="Running Cow"
-            className="running-cow"
-            style={{ maxWidth: "220px" }}
-          />
         </div>
       )}
 
@@ -154,18 +167,6 @@ export default function PortDisplay() {
           }
           .blinking-text {
             animation: blinkEffect 1.5s infinite ease-in-out;
-          }
-
-          /* Running Cow Animation */
-          @keyframes moveCow {
-            0% { left: -100px; }
-            100% { left: 450%; }
-          }
-          .running-cow {
-            position: absolute;
-            bottom: 0;
-            left: -150px;
-            animation: moveCow 30s linear infinite;
           }
         `}
       </style>
