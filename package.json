@@ -2,7 +2,7 @@
   "name": "my_app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nash300.github.io/Arla-port-screens",
+  "homepage": "https://nash300.github.io/arla-port-screens/",
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
     "@testing-library/dom": "^10.4.0",
