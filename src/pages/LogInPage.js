@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import navigation hook
 
 export default function LogInPage() { // TO-DO implement authentification
-  const correctUserName = "a"; // Hardcoded credentials
-  const correctPassword = "1";
+  const correctUserName = "Gs1"; // Hardcoded credentials
+  const correctPassword = "Start1234";
 
   const [userName, setUserName] = useState(""); // State for username input
   const [password, setPassword] = useState(""); // State for password input
