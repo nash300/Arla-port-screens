@@ -1,17 +1,15 @@
 {
   "files": {
-    "main.css": "/arla-port-screens/static/css/main.ffaff226.css",
-    "main.js": "/arla-port-screens/static/js/main.41f0a609.js",
-    "static/js/952.752e13e3.chunk.js": "/arla-port-screens/static/js/952.752e13e3.chunk.js",
-    "static/media/arla-logo.png": "/arla-port-screens/static/media/arla-logo.9c30c8ac17af3c10b29f.png",
-    "static/media/cow.png": "/arla-port-screens/static/media/cow.7c8235d552466ffe5657.png",
-    "index.html": "/arla-port-screens/index.html",
-    "main.ffaff226.css.map": "/arla-port-screens/static/css/main.ffaff226.css.map",
-    "main.41f0a609.js.map": "/arla-port-screens/static/js/main.41f0a609.js.map",
-    "952.752e13e3.chunk.js.map": "/arla-port-screens/static/js/952.752e13e3.chunk.js.map"
+    "main.css": "/static/css/main.ffaff226.css",
+    "main.js": "/static/js/main.0acb1cd2.js",
+    "static/js/952.752e13e3.chunk.js": "/static/js/952.752e13e3.chunk.js",
+    "index.html": "/index.html",
+    "main.ffaff226.css.map": "/static/css/main.ffaff226.css.map",
+    "main.0acb1cd2.js.map": "/static/js/main.0acb1cd2.js.map",
+    "952.752e13e3.chunk.js.map": "/static/js/952.752e13e3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ffaff226.css",
-    "static/js/main.41f0a609.js"
+    "static/js/main.0acb1cd2.js"
   ]
 }
