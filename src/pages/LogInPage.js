@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import navigation hook
+import arla_logo from "../images/arla-logo.png";
 
-export default function LogInPage() { // TO-DO implement authentification
-  const correctUserName = "a"; // Hardcoded credentials
-  const correctPassword = "1";
+export default function LogInPage() {
+  // TO-DO implement authentification
+  const correctUserName = "Gs1"; // Hardcoded credentials
+  const correctPassword = "Start1234";
 
   const [userName, setUserName] = useState(""); // State for username input
   const [password, setPassword] = useState(""); // State for password input
@@ -30,7 +32,7 @@ export default function LogInPage() { // TO-DO implement authentification
           {/* Logo Section */}
           <div className="col-md-5 d-flex align-items-center justify-content-center bg-light">
             <img
-              src="/arla-logo.png"
+              src={arla_logo}
               alt="Logo"
               className="img-fluid"
               style={{ maxWidth: "120px" }}
@@ -39,7 +41,7 @@ export default function LogInPage() { // TO-DO implement authentification
 
           {/* Form Section */}
           <div className="col-md-7 p-4">
-            <h3 className="mb-3 text-center">Terminaldisplaysystem</h3>
+            <h3 className="mb-3 text-center">LagerInfoSystem</h3>
             <p className="text-muted text-center">Logga in för att fortsätta</p>
             <form onSubmit={handleLogin}>
               <div className="mb-3">
@@ -69,6 +71,14 @@ export default function LogInPage() { // TO-DO implement authentification
               </div>
             </form>
           </div>
+        </div>
+
+        {/* Footer Section for Credits */}
+        <div className="text-center mt-3">
+          <p className="text-muted small">
+            © 2025 Nadeesha Aravinda. All rights reserved. | Developed by Your
+            Name
+          </p>
         </div>
       </div>
     </div>

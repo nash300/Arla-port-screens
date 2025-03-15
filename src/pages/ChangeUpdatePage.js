@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
 import supabase from "../Utilities/supabase";
+import arla_logo from "../images/arla-logo.png";
+
 
 export default function ChangeUpdatePage() {
   // State for form inputs
@@ -115,7 +117,7 @@ export default function ChangeUpdatePage() {
         {/* Logo Section - Centered */}
         <div className="d-flex justify-content-center mb-3">
           <img
-            src="/arla-logo.png"
+            src={arla_logo}
             alt="Logo"
             className="img-fluid"
             style={{ maxWidth: "100px" }}
