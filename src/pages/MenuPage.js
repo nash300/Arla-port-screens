@@ -39,7 +39,13 @@ export default function MenuPage() {
           <div className="col-md-7 p-4 ">
             {/********************* Right hand side section *******************/}
             {/* Brand name */}
-            <h3 className="mb-3 text-center">InfoSync</h3> <hr />
+            <h3
+              className="mb-3 text-center"
+              style={{ fontFamily: "'Syncopate', sans-serif" }}
+            >
+              InfoSync
+            </h3>{" "}
+            <hr />
             <p className="text-muted text-center">välj ett alternativ</p>
             {/* Button section */}
             <div className="row-md-7 p-1 d-grid ">

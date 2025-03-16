@@ -27,6 +27,15 @@ export default function PortDisplay() {
   const [loading, setLoading] = useState(true); // State for loading status indicator
   const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
+  //____________________________________________________
+  // Inline styles for the rotation animation
+  // Used to animate the default screen image___________
+  const rotatingStyle = {
+    animation: "rotateY360 6s ease-in-out infinite",
+    transformStyle: "preserve-3d",
+    width: "600px", // Adjust size as needed
+  };
+
   //________________________________________________________________________________
   // Fetches port information from Supabase based on the port number
   // If no data is found, it updates the state accordingly._________________________
@@ -144,7 +153,27 @@ export default function PortDisplay() {
             ) : !portInfo ? (
               // Show an image when no data is found
               <div className="d-flex align-items-center justify-content-center w-100 h-100">
-                <img src="/cow.png" alt="No data" className="img-fluid" />
+                {/* Rotating Image */}
+                <img
+                  src="/cow.png"
+                  alt="No data"
+                  className="img-fluid"
+                  style={rotatingStyle}
+                />
+
+                {/* Adding the keyframes inside a <style> tag to animate the default screen image */}
+                <style>
+                  {`
+          @keyframes rotateY360 {
+            from {
+              transform: rotateY(0deg);
+            }
+            to {
+              transform: rotateY(360deg);
+            }
+          }
+        `}
+                </style>
               </div>
             ) : (
               // Display each item in portInfo array

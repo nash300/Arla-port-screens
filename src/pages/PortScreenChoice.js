@@ -1,26 +1,16 @@
-/* //////////////////////////////////////////////////////////////////////////////////// 
-PURPOSE:
-An interface for the user to select the port screen to be displayed.
-
-FUNCTIONALITY:
-* list all port display screen items in the screen.
-* The display screen choosen here will remain in the display screen of the given port.
-* The port displays that are currently in use is displayed in different colour.
-/////////////////////////////////////////////////////////////////////////////////////*/
-
 import { useNavigate } from "react-router-dom";
 import supabase from "../Utilities/supabase.js"; // Supabase client for database queries
 import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 
 export default function PortScreenChoice() {
   const nrOfPorts = 26; // Number of ports. Update here if the nr of displays are changed.
   const navigate = useNavigate(); // Hook for navigation
   const [portList, setPortList] = useState([]); // (from database) - retrieved list of ports that are currently in use.
 
-  //_____________________________________________________________________
   // Fetch data when component mounts
-  // retrieves a list of ports that are currently in use and-
-  // stores in portList hook_____________________________________________
+  // retrieves a list of ports that are currently in use and
+  // stores in portList hook
   useEffect(() => {
     const fetchPortData = async () => {
       try {
@@ -35,9 +25,7 @@ export default function PortScreenChoice() {
           console.error("Supabase query error:", error);
         } else {
           console.log("Updated data received:", data);
-
-          // Convert port numbers to integers before storing
-          setPortList(data.map((item) => parseInt(item.port_nr, 10)));
+          setPortList(data.map((item) => parseInt(item.port_nr, 10))); // Convert port numbers to integers before storing
         }
       } catch (error) {
         console.error("Unexpected error:", error);
@@ -47,9 +35,8 @@ export default function PortScreenChoice() {
     fetchPortData(); // Run when component mounts
   }, []); // Empty dependency array = runs once when mounted
 
-  //__________________________________________________________
   // Handle function for port screen click
-  // re-direct the user to the choosen port screen____________
+  // re-direct the user to the chosen port screen
   const portClickHandler = (portNumber) => {
     navigate("/PortDisplay", {
       state: {
@@ -59,31 +46,37 @@ export default function PortScreenChoice() {
   };
 
   return (
-    <div className="container d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-      {/**************  Heading section ****************/}
-      <div className="text-center mb-4">
-        <h2 className=" ">Portskärm</h2>
-        <hr />
-      </div>
+    <div className="container d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
+    
 
-      {/**************  Port screen list section  ****************/}
-      <div className="row g-3 justify-content-center">
+      {/* Port screen list section */}
+      <div className="row g-4 justify-content-center">
         {[...Array(nrOfPorts)].map((_, i) => {
           const portNumber = i + 1;
           const isHighlighted = portList.includes(portNumber); // Check if port is in portList
 
           return (
-            <div key={portNumber} className="col-lg-2 col-md-3 col-sm-4">
-              <button
-                className={`btn w-100 p-3 shadow rounded fw-bold ${
+            <div key={portNumber} className=" col-lg-2 col-md-3 col-sm-4">
+              <div
+                className={`card border-dark  border-0 ${
                   isHighlighted
-                    ? "bg-warning text-dark" // If the port screen is currently in use
-                    : "bg-success text-white" // If the port screen is currently NOT in use
+                    ? "bg-warning text-dark "
+                    : "bg-secondary text-white"
                 }`}
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
                 onClick={() => portClickHandler(portNumber)}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.2)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               >
-                Port {portNumber}
-              </button>
+                <div className="card-body  justify-content-center align-items-center  text-center">
+                  <h5>Port {portNumber}</h5>
+                  <p className="card-text ">{isHighlighted ? "🖥️" : "🖥️"}</p>
+                </div>
+              </div>
             </div>
           );
         })}

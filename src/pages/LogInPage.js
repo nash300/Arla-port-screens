@@ -52,7 +52,12 @@ export default function LogInPage() {
 
           {/****************** Form Section **********************/}
           <div className="col-md-7 p-4">
-            <h3 className="mb-3 text-center">InfoSync</h3>
+            <h3
+              className="mb-3 text-center"
+              style={{ fontFamily: "'Syncopate', sans-serif" }}
+            >
+              InfoSync
+            </h3>{" "}
             <p className="text-muted text-center">Logga in för att fortsätta</p>
             <form onSubmit={handleLogin}>
               <div className="mb-3">
