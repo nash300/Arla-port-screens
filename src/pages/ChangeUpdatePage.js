@@ -103,7 +103,6 @@ export default function ChangeUpdatePage() {
       console.error("Fel vid insättning i databasen:", error);
       alert("Ett fel uppstod vid uppdatering av databasen.");
     } else {
-      alert("Portskärmen uppdaterades!");
       console.log("Inlagt i databasen:", data);
 
       // Reset form fields after successful submission
