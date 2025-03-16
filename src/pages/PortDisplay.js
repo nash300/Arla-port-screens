@@ -19,7 +19,7 @@ import RootNumber from "../components/RootNumber.js"; // Component to display th
 export default function PortDisplay() {
   // initializing location object & Retrieve port number from the previous page
   const location = useLocation();
-  const { portNr } = location.state || {}; // Retrieve port number from the previous page
+  const portNr = Number(location.state?.portNr); // Retrieve port number from the previous page
 
   //__________________________________________________________________________________
   // State to store port information__________________________________________________
@@ -37,9 +37,8 @@ export default function PortDisplay() {
     try {
       console.log(`Fetching data for port_nr: ${portNr}`);
 
-      // Convert port number to integer
-      const portNumber = parseInt(portNr, 10);
-      if (isNaN(portNumber)) {
+      // Validate portNr
+      if (!portNr || isNaN(portNr)) {
         setErrorMessage("Invalid port number.");
         setLoading(false);
         return;
@@ -49,7 +48,7 @@ export default function PortDisplay() {
       const { data, error } = await supabase
         .from("Port_info")
         .select("*")
-        .eq("port_nr", portNumber);
+        .eq("port_nr", portNr);
 
       if (error) {
         console.error("Supabase query error:", error);
@@ -84,25 +83,31 @@ export default function PortDisplay() {
   // Subscribe to real-time Supabase updates to listen-
   // for changes in the "Port_info" table____________________________________
   useEffect(() => {
+    // Check if `portNr` is valid before proceeding
+    // - If `portNr` is undefined, null, or NaN, exit early (prevent unnecessary subscription)
+    if (!portNr || isNaN(portNr)) return; // Prevent subscribing with invalid portNr
+
+    // Create a Supabase real-time channel (subscription)
+    // - The channel listens for changes in the `Port_info` table
     const channel = supabase
-      .channel("realtime-ports") // Create a real-time channel
+      .channel("realtime-ports") // // Create a unique channel for listening to port updates
       .on(
-        "postgres_changes", // Listen for any database changes
+        "postgres_changes", // Listen for database changes
         { event: "*", schema: "public", table: "Port_info" },
         (payload) => {
+          // Callback function runs when a change occurs
           console.log("Database change detected:", payload);
-          fetchPortData(); // Re-fetch latest data when changes occur
+          fetchPortData(); // Re-fetch latest data when a change occurs
         }
       )
-      .subscribe();
+      .subscribe(); // Subscribe to real-time changes
 
-    //__________________________________________
-    // Cleanup function to unsubscribe when- 
-    // the component unmounts___________________
+    // Cleanup function to run when the component unmounts (or when `portNr` changes)
+    // - This prevents memory leaks by unsubscribing from the Supabase channel
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [portNr]); // Re-run this effect whenever `portNr` changes
 
   return (
     <div className="vh-100 d-flex flex-column">
