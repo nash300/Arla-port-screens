@@ -26,6 +26,16 @@ export default function ChangeUpdatePage() {
   const [selectedMinutes, setSelectedMinutes] = useState(0); // (Input)-Minutes selection
   const [portList, setPortList] = useState([]); // (From database)- the ports that currently are in use
 
+  // Remove a port from the portList_______________________________
+  // This is used to remove a port from the local copy of-
+  //  the portList as you delete it's record in the database.______
+  const removePort = (portToRemove) => {
+    setPortList((prevPortList) =>
+      prevPortList.filter((port) => port !== Number(portToRemove))
+    );
+  };
+
+
   //_________________________________________________________
   // Generate hour options (0 - 5)
   // Used in (nr of hours) drop down list.___________________
@@ -178,7 +188,6 @@ export default function ChangeUpdatePage() {
       directToPortScreen(portToRedirect);
     }
   };
-  
 
   //____________________________________________________________________________________________
   // Delete button handle functions
@@ -202,6 +211,7 @@ export default function ChangeUpdatePage() {
         alert("Kunde inte radera posten.");
       } else {
         alert("Portdisplayen har återställts");
+        removePort(selectedPortNumber); // removes the port from the ports in use state
         setSelectedPortNumber(""); // Reset selected port
       }
     } catch (error) {
