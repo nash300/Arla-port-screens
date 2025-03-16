@@ -1,3 +1,15 @@
+/* /////////////////////////////////////////////////////////////////////////////// 
+PURPOSE:
+Reusable component to display the route numbers.
+
+PARAMETERS:
+rootNr | an string that representate a route number.
+
+FUNCTIONALITY:
+* Reading the in comming parameter (route number) and display it with CSS styling.
+* Ignores the space if no in-parameter is present.
+////////////////////////////////////////////////////////////////////////////////*/
+
 import React from "react";
 
 const RootNumber = ({ rootNr }) => {
