@@ -1,34 +1,53 @@
+/* /////////////////////////////////////////////////////////////////////////////// 
+PURPOSE:
+An interface for the user to add/change data that are shown in the port screens.
+
+FUNCTIONALITY:
+* Collect and store information for the ports from user.
+* Retrieve data (port number) of the currently used port displays.
+* Provide an option to reset/clear a port display.
+* Remove/Clear currently stored data for the selected port before updating.
+* Update the database (Port_info)
+////////////////////////////////////////////////////////////////////////////////*/
+
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
 import supabase from "../Utilities/supabase";
 import { useNavigate } from "react-router-dom";
 
 export default function ChangeUpdatePage() {
-  // State for form inputs
+  // State for form inputs_____________________________________________________________________________
   const [selectedPortNumber, setSelectedPortNumber] = useState("");
-  const [leftRoute, setLeftRoute] = useState("");
-  const [middleRoute, setMiddleRoute] = useState("");
-  const [rightRoute, setRightRoute] = useState("");
-  const [message, setMessage] = useState(""); // State for text area input
-  const [selectedHours, setSelectedHours] = useState(1); // Hours selection
-  const [selectedMinutes, setSelectedMinutes] = useState(0); // Minutes selection
+  const [leftRoute, setLeftRoute] = useState(""); // (Input)-left route to the database table.
+  const [middleRoute, setMiddleRoute] = useState(""); // (Input)-middle route to the database table.
+  const [rightRoute, setRightRoute] = useState(""); // (Input)-right route to the database table.
+  const [message, setMessage] = useState(""); // (Input)- text area input
+  const [selectedHours, setSelectedHours] = useState(1); // (Input)-Hours selection
+  const [selectedMinutes, setSelectedMinutes] = useState(0); // (Input)-Minutes selection
+  const [portList, setPortList] = useState([]); // (From database)- the ports that currently are in use
+  //----------------------------------------------------------------------------------------------------
 
-  // Deletes the records in the data base for the shoosen port number
-  const [portList, setPortList] = useState([]);
-
-  // Generate hour options (0 - 5)
+  // Generate hour options (0 - 5)___________________________
+  // Used in (nr of hours) drop down list.
   const hourOptions = Array.from({ length: 6 }, (_, i) => i);
-  // Minute options (0 or 30 mins)
-  const minuteOptions = [0, 1, 15, 30, 45];
+  //---------------------------------------------------------
 
-  // Summing up the number of hours and minutes into minutes
+  // Minute options (0 or 30 mins)__________
+  // Used in |nr of hours| drop down list.
+  const minuteOptions = [0, 1, 15, 30, 45];
+  //----------------------------------------
+
+  // Summing up the number of hours and minutes into minutes________________
+  // The output will be saved in the database.
   const minuteCounter = (selectedHours, selectedMinutes) => {
     return 60 * parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10);
   };
-
   const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
+  //------------------------------------------------------------------------
 
-  const navigate = useNavigate(); // Hook for navigation
+  // Hook for navigation_______________________________
+  // Re direct the page to the newly update port screen
+  const navigate = useNavigate();
   const portToRedirect = selectedPortNumber;
   const directToPortScreen = (userSelectedPortNr) => {
     navigate("/PortDisplay", {
@@ -37,15 +56,53 @@ export default function ChangeUpdatePage() {
       },
     });
   };
+  //---------------------------------------------------
 
-  // Handle text area change with character limit (30 characters)
+  // Handle text area change __________
+  // character limit (30 characters)
   const handleTextChange = (e) => {
     if (e.target.value.length <= 30) {
       setMessage(e.target.value);
     }
   };
+  //-----------------------------------
 
-  // Function to handle form submission
+  // Fetch port data when component mounts____________________________________
+  // Used to retrieve and store the ports that are in use to the PortList hook.
+  useEffect(() => {
+    const fetchPortData = async () => {
+      try {
+        console.log(`Fetching all data from Supabase`);
+
+        // Query Supabase for port data
+        const { data, error } = await supabase
+          .from("Port_info")
+          .select("port_nr");
+
+        if (error) {
+          console.error("Supabase query error:", error);
+        } else {
+          console.log("Updated data received:", data);
+
+          // Convert port numbers to integers before storing
+          setPortList(data.map((item) => parseInt(item.port_nr, 10)));
+        }
+      } catch (error) {
+        console.error("Unexpected error:", error);
+      }
+    };
+
+    fetchPortData(); // Run when component mounts
+  }, []); // Empty dependency array = runs once when mounted
+  //-----------------------------------------------------------------------
+
+  // Function to handle form submission_________________________
+  // * Does some input validations.
+  // * Checks if there already exists data for the selected port.
+  // * If it does, delete them.
+  // * Send the data to the data base from the states.
+  // * Reset form fields after successful submission.
+  // * Navigate to the port screen with the saved port number
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,12 +177,13 @@ export default function ChangeUpdatePage() {
       directToPortScreen(portToRedirect);
     }
   };
-
-
   //-----------------------------------------------------------
-  const handleDeleteButton = async () => {
-    if (!selectedPortNumber) return;
 
+  // Delete button handle functions_____________________________________________________________
+  // (This button renders only if there are existing data for the choosen port in the database.)
+  // * Delete data for the choosen port from the database
+  // * Reset selected port
+  const handleDeleteButton = async () => {
     const confirmDelete = window.confirm(
       "Är du säker på att du vill återställa denna skärm?"
     );
@@ -149,41 +207,13 @@ export default function ChangeUpdatePage() {
     }
   };
 
-
-  // Fetch data when component mounts---------------------------------------
-  useEffect(() => {
-    const fetchPortData = async () => {
-      try {
-        console.log(`Fetching all data from Supabase`);
-
-        // Query Supabase for port data
-        const { data, error } = await supabase
-          .from("Port_info")
-          .select("port_nr");
-
-        if (error) {
-          console.error("Supabase query error:", error);
-        } else {
-          console.log("Updated data received:", data);
-
-          // Convert port numbers to integers before storing
-          setPortList(data.map((item) => parseInt(item.port_nr, 10)));
-        }
-      } catch (error) {
-        console.error("Unexpected error:", error);
-      }
-    };
-
-    fetchPortData(); // Run when component mounts
-  }, []); // Empty dependency array = runs once when mounted
-
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
       <div
         className="bg-white shadow-lg rounded-4 p-5 border border-3 border-success w-50 mx-auto"
         style={{ maxWidth: "600px", minWidth: "300px" }}
       >
-        {/* Logo Section - Centered */}
+        {/* Logo Section  */}
         <div className="d-flex justify-content-center mb-3">
           <img
             src="/arla-logo.png"
@@ -193,14 +223,14 @@ export default function ChangeUpdatePage() {
           />
         </div>
 
-        {/* Form Header - Centered */}
+        {/* Form Header  */}
         <h2 className="text-center text-success fw-bold mb-4 border-bottom pb-2">
           Ändra / Uppdatera Information
         </h2>
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* *********************  Selecting port number section  ******************************/}
+          {/* ***********************  Välj portnumret  ******************************/}
           <div className="border bg-success bg-opacity-25 mb-4 text-center p-3 rounded">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex flex-column">
@@ -238,7 +268,7 @@ export default function ChangeUpdatePage() {
             </div>
           </div>
 
-          {/******************************* Route number Selection Area *********************************/}
+          {/******************************* Ange ruttnummer *********************************/}
           <div className="mb-4 border p-3 rounded">
             <label className="form-label fw-bold text-dark d-block text-center mb-3">
               Ange ruttnummer:
@@ -286,7 +316,7 @@ export default function ChangeUpdatePage() {
             </div>
           </div>
 
-          {/*******************************  Time Limit Selection ************************************/}
+          {/*******************************  Välj tidsgräns ************************************/}
           <div className="mb-4 text-center border p-3 rounded">
             <label className="form-label fw-bold text-dark">
               Välj tidsgräns (max 5 timmar):
@@ -322,7 +352,7 @@ export default function ChangeUpdatePage() {
             </div>
           </div>
 
-          {/* Message Text Area */}
+          {/*************************** Meddelande  *********************************/}
           <div className="mb-4 text-center border p-3 rounded">
             <label className="form-label fw-bold text-dark">
               Meddelande (max 30 tecken):
@@ -340,7 +370,7 @@ export default function ChangeUpdatePage() {
             </small>
           </div>
 
-          {/* Submit Button */}
+          {/****************** Submit Button ********************************/}
           <button type="submit" className="btn btn-success w-100 fw-bold p-2">
             Uppdatera
           </button>
