@@ -1,15 +1,9 @@
-/*
-<<<<<<<<<<<<<<<   LoginPage -> MenuPage    >>>>>>>>>>>>>
-*
-* About This Page---
-* This page offers 2 options to the user
-*
-Portskärm---- 
-Select/Allocate the port display.
-
-Ändra/Uppdatera---
-Update info to be sent into the port display screens
-*/
+/* /////////////////////////////////////////////////////////////////////////////// 
+PURPOSE & FUNCTIONALITY:
+This page direct the user to:
+1) Display screen selection
+2) Update/Change display information.
+////////////////////////////////////////////////////////////////////////////////*/
 
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Import navigation hook
@@ -21,9 +15,9 @@ export default function MenuPage() {
     navigate("/PortScreenChoice"); // Redirect to port screen coice page}
   };
 
-   const handleChangeUpdateClick = () => {
-     navigate("/ChangeUpdatePage"); // Redirect to port screen coice page}
-   };
+  const handleChangeUpdateClick = () => {
+    navigate("/ChangeUpdatePage"); // Redirect to port screen coice page}
+  };
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -32,7 +26,7 @@ export default function MenuPage() {
         style={{ maxWidth: "700px", width: "100%" }}
       >
         <div className="row g-0">
-          {/* Logo Section */}
+          {/******************************** Logo Section (Left) ******************************/}
           <div className="col-md-5 d-flex align-items-center justify-content-center bg-light">
             <img
               src="/arla-logo.png"
@@ -43,9 +37,11 @@ export default function MenuPage() {
           </div>
 
           <div className="col-md-7 p-4 ">
-            {/* Right hand side section*/}
-            <h3 className="mb-3 text-center">Portdisplaysystem</h3> <hr />
+            {/********************* Right hand side section *******************/}
+            {/* Brand name */}
+            <h3 className="mb-3 text-center">InfoSync</h3> <hr />
             <p className="text-muted text-center">välj ett alternativ</p>
+            {/* Button section */}
             <div className="row-md-7 p-1 d-grid ">
               <button
                 className="btn btn-success m-2"

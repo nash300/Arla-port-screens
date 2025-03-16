@@ -1,21 +1,35 @@
+/* ////////////////////////////////////////////////////////////////////////////////////////// 
+PURPOSE:
+This is the page that the display screen shows.
+
+PARAMETERS 
+
+
+FUNCTIONALITY:
+* retrieves information to be displayed for the corresponding screen
+* Commiunicating with the database to get real-time change alerts to the table.
+* If no records for the screen are present in the database, outputs an image (default image)
+///////////////////////////////////////////////////////////////////////////////////////////*/
+
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // Hook to access the passed data (port number)
 import supabase from "../Utilities/supabase.js"; // Supabase client for database queries
 import RootNumber from "../components/RootNumber.js"; // Component to display the root number
 
 export default function PortDisplay() {
+  // initializing location object & Retrieve port number from the previous page
   const location = useLocation();
   const { portNr } = location.state || {}; // Retrieve port number from the previous page
 
-  // State to store port information
+  //__________________________________________________________________________________
+  // State to store port information__________________________________________________
   const [portInfo, setPortInfo] = useState(null);
-  const [loading, setLoading] = useState(true); // State for loading indicator
+  const [loading, setLoading] = useState(true); // State for loading status indicator
   const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
-  /**
-   * Fetches port information from Supabase based on the port number.
-   * If no data is found, it updates the state accordingly.
-   */
+  //________________________________________________________________________________
+  // Fetches port information from Supabase based on the port number
+  // If no data is found, it updates the state accordingly._________________________
   const fetchPortData = async () => {
     setLoading(true);
     setErrorMessage("");
@@ -57,14 +71,18 @@ export default function PortDisplay() {
     }
   };
 
-  // Fetch port data when the component mounts or when portNr changes
+  //_________________________________________________________________
+  // Fetch port data when the component mounts or-
+  // when portNr changes_____________________________________________
   useEffect(() => {
     if (portNr) {
       fetchPortData();
     }
   }, [portNr]);
 
-  // Subscribe to real-time Supabase updates to listen for changes in the "Port_info" table
+  //_________________________________________________________________________
+  // Subscribe to real-time Supabase updates to listen-
+  // for changes in the "Port_info" table____________________________________
   useEffect(() => {
     const channel = supabase
       .channel("realtime-ports") // Create a real-time channel
@@ -78,7 +96,9 @@ export default function PortDisplay() {
       )
       .subscribe();
 
-    // Cleanup function to unsubscribe when the component unmounts
+    //__________________________________________
+    // Cleanup function to unsubscribe when- 
+    // the component unmounts___________________
     return () => {
       supabase.removeChannel(channel);
     };
@@ -86,7 +106,7 @@ export default function PortDisplay() {
 
   return (
     <div className="vh-100 d-flex flex-column">
-      {/* Header Section */}
+      {/*************************** Header Section ***************************/}
       <div
         className="bg-dark text-white d-flex align-items-center justify-content-center text-center"
         style={{ height: "20vh" }}
@@ -107,7 +127,7 @@ export default function PortDisplay() {
         </div>
       </div>
 
-      {/* Middle Section - Displays port information */}
+      {/********************* Middle Section - Displays port information **************/}
       <div className="d-flex flex-grow-1 justify-content-center">
         <div className="container-fluid h-100">
           <div className="row h-100 gap-2 justify-content-center">
@@ -157,7 +177,7 @@ export default function PortDisplay() {
         </div>
       </div>
 
-      {/* Bottom Section - Message Display (only shown if any portInfo item has a message) */}
+      {/*********** Bottom Section - Message Display (only shown if any portInfo item has a message) **********/}
       {portInfo && portInfo.some((item) => item.msg !== null) && (
         <div
           className="bg-warning text-white d-flex align-items-center justify-content-center text-center position-relative"

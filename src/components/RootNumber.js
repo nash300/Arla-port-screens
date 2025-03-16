@@ -1,6 +1,6 @@
 /* /////////////////////////////////////////////////////////////////////////////// 
 PURPOSE:
-Reusable component to display the route numbers.
+This is a custom component to display the route numbers.
 
 PARAMETERS:
 rootNr | an string that representate a route number.

@@ -17,8 +17,10 @@ export default function PortScreenChoice() {
   const navigate = useNavigate(); // Hook for navigation
   const [portList, setPortList] = useState([]); // (from database) - retrieved list of ports that are currently in use.
 
-  // Fetch data when component mounts_______________________________________________
-  // retrieves a list of ports that are currently in use and stores in portList hook
+  //_____________________________________________________________________
+  // Fetch data when component mounts
+  // retrieves a list of ports that are currently in use and-
+  // stores in portList hook_____________________________________________
   useEffect(() => {
     const fetchPortData = async () => {
       try {
@@ -44,10 +46,10 @@ export default function PortScreenChoice() {
 
     fetchPortData(); // Run when component mounts
   }, []); // Empty dependency array = runs once when mounted
-  //-------------------------------------------------------------------------->>>
 
-  // Handle function for port screen click _________
-  // re-direct the user to the choosen port screen
+  //__________________________________________________________
+  // Handle function for port screen click
+  // re-direct the user to the choosen port screen____________
   const portClickHandler = (portNumber) => {
     navigate("/PortDisplay", {
       state: {
@@ -55,7 +57,6 @@ export default function PortScreenChoice() {
       },
     });
   };
-  //--------------------------------------------->>>
 
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center vh-100 bg-light">

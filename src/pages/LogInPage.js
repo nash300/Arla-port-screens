@@ -1,3 +1,16 @@
+/* /////////////////////////////////////////////////////////////////////////////// 
+PURPOSE:
+This is the first landing page for the site.
+Performs user authentifications.
+
+PARAMETERS 
+correctUserName | hard corded username for the site
+correctPassword | hard corded password for the site
+
+FUNCTIONALITY:
+Checks and validates user input login data with the hardcorded data
+////////////////////////////////////////////////////////////////////////////////*/
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import navigation hook
 
@@ -27,7 +40,7 @@ export default function LogInPage() {
         style={{ maxWidth: "700px", width: "100%" }}
       >
         <div className="row g-0">
-          {/* Logo Section */}
+          {/************** Logo Section *************************/}
           <div className="col-md-5 d-flex align-items-center justify-content-center bg-light">
             <img
               src="/arla-logo.png"
@@ -37,9 +50,9 @@ export default function LogInPage() {
             />
           </div>
 
-          {/* Form Section */}
+          {/****************** Form Section **********************/}
           <div className="col-md-7 p-4">
-            <h3 className="mb-3 text-center">Terminaldisplaysystem</h3>
+            <h3 className="mb-3 text-center">InfoSync</h3>
             <p className="text-muted text-center">Logga in för att fortsätta</p>
             <form onSubmit={handleLogin}>
               <div className="mb-3">
@@ -71,12 +84,10 @@ export default function LogInPage() {
           </div>
         </div>
 
-        {/* Footer Section for Credits */}
+        {/*************** Footer Section for Credits ****************/}
         <footer className="text-center mt-4">
           <hr />
-          <p className="text-muted mb-1">
-            Developed by Nadeesha Aravinda
-          </p>
+          <p className="text-muted mb-1">Developed by Nadeesha Aravinda</p>
           <p className="text-muted small">
             © {new Date().getFullYear()}. All rights reserved.
           </p>

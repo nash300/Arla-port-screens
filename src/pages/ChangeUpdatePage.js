@@ -25,28 +25,28 @@ export default function ChangeUpdatePage() {
   const [selectedHours, setSelectedHours] = useState(1); // (Input)-Hours selection
   const [selectedMinutes, setSelectedMinutes] = useState(0); // (Input)-Minutes selection
   const [portList, setPortList] = useState([]); // (From database)- the ports that currently are in use
-  //----------------------------------------------------------------------------------------------------
 
-  // Generate hour options (0 - 5)___________________________
-  // Used in (nr of hours) drop down list.
+  //_________________________________________________________
+  // Generate hour options (0 - 5)
+  // Used in (nr of hours) drop down list.___________________
   const hourOptions = Array.from({ length: 6 }, (_, i) => i);
-  //---------------------------------------------------------
 
-  // Minute options (0 or 30 mins)__________
-  // Used in |nr of hours| drop down list.
+  //____________________________________________
+  // Minute options (0 or 30 mins)
+  // Used in |nr of hours| drop down list_______
   const minuteOptions = [0, 1, 15, 30, 45];
-  //----------------------------------------
 
-  // Summing up the number of hours and minutes into minutes________________
-  // The output will be saved in the database.
+  //________________________________________________________________________
+  // Summing up the number of hours and minutes into minutes
+  // The output will be saved in the database.______________________________
   const minuteCounter = (selectedHours, selectedMinutes) => {
     return 60 * parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10);
   };
   const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
-  //------------------------------------------------------------------------
 
-  // Hook for navigation_______________________________
-  // Re direct the page to the newly update port screen
+  //_________________________________________________________
+  // Hook for navigation
+  // Re direct the page to the newly update port screen______
   const navigate = useNavigate();
   const portToRedirect = selectedPortNumber;
   const directToPortScreen = (userSelectedPortNr) => {
@@ -56,19 +56,20 @@ export default function ChangeUpdatePage() {
       },
     });
   };
-  //---------------------------------------------------
 
-  // Handle text area change __________
-  // character limit (30 characters)
+  //_______________________________________
+  // Handle text area change
+  // character limit (30 characters)_______
   const handleTextChange = (e) => {
     if (e.target.value.length <= 30) {
       setMessage(e.target.value);
     }
   };
-  //-----------------------------------
 
-  // Fetch port data when component mounts____________________________________
-  // Used to retrieve and store the ports that are in use to the PortList hook.
+  //_____________________________________________________________
+  // Fetch port data when component mounts
+  // Used to retrieve and store the ports that-
+  // are in use to the PortList hook.____________________________
   useEffect(() => {
     const fetchPortData = async () => {
       try {
@@ -94,15 +95,15 @@ export default function ChangeUpdatePage() {
 
     fetchPortData(); // Run when component mounts
   }, []); // Empty dependency array = runs once when mounted
-  //-----------------------------------------------------------------------
 
-  // Function to handle form submission_________________________
+  //______________________________________________________________________
+  // Function to handle form submission
   // * Does some input validations.
   // * Checks if there already exists data for the selected port.
   // * If it does, delete them.
   // * Send the data to the data base from the states.
   // * Reset form fields after successful submission.
-  // * Navigate to the port screen with the saved port number
+  // * Navigate to the port screen with the saved port number_____________
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -177,12 +178,13 @@ export default function ChangeUpdatePage() {
       directToPortScreen(portToRedirect);
     }
   };
-  //-----------------------------------------------------------
+  
 
-  // Delete button handle functions_____________________________________________________________
-  // (This button renders only if there are existing data for the choosen port in the database.)
+  //____________________________________________________________________________________________
+  // Delete button handle functions
+  // (This button renders only if there are existing data for the choosen port in the database)
   // * Delete data for the choosen port from the database
-  // * Reset selected port
+  // * Reset selected port______________________________________________________________________
   const handleDeleteButton = async () => {
     const confirmDelete = window.confirm(
       "Är du säker på att du vill återställa denna skärm?"
@@ -213,7 +215,7 @@ export default function ChangeUpdatePage() {
         className="bg-white shadow-lg rounded-4 p-5 border border-3 border-success w-50 mx-auto"
         style={{ maxWidth: "600px", minWidth: "300px" }}
       >
-        {/* Logo Section  */}
+        {/************************* Logo Section  **********************************/}
         <div className="d-flex justify-content-center mb-3">
           <img
             src="/arla-logo.png"
@@ -223,7 +225,7 @@ export default function ChangeUpdatePage() {
           />
         </div>
 
-        {/* Form Header  */}
+        {/************* Form Header  ****************/}
         <h2 className="text-center text-success fw-bold mb-4 border-bottom pb-2">
           Ändra / Uppdatera Information
         </h2>
