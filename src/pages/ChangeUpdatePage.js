@@ -127,7 +127,7 @@ export default function ChangeUpdatePage() {
     if (!selectedPortNumber) return;
 
     const confirmDelete = window.confirm(
-      "Är du säker på att du vill radera information?"
+      "Är du säker på att du vill återställa denna skärm?"
     );
     if (!confirmDelete) return;
 
@@ -141,7 +141,7 @@ export default function ChangeUpdatePage() {
         console.error("Error deleting record:", error);
         alert("Kunde inte radera posten.");
       } else {
-        alert("Portdisplayen har uppdaterats framgångsrikt");
+        alert("Portdisplayen har återställts");
         setSelectedPortNumber(""); // Reset selected port
       }
     } catch (error) {
@@ -230,9 +230,9 @@ export default function ChangeUpdatePage() {
                 <button
                   type="button"
                   onClick={handleDeleteButton}
-                  className="btn btn-danger ms-3"
+                  className="btn btn-danger ms-3 fw-bold p-2"
                 >
-                  Ta bort
+                  Återställ port {selectedPortNumber}
                 </button>
               ) : null}
             </div>
