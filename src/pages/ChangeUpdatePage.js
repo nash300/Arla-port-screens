@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
 import supabase from "../Utilities/supabase";
+import { useNavigate } from "react-router-dom";
 
 export default function ChangeUpdatePage() {
   // State for form inputs
@@ -23,6 +24,16 @@ export default function ChangeUpdatePage() {
   };
 
   const totalMinutes = minuteCounter(selectedHours, selectedMinutes);
+
+  const navigate = useNavigate(); // Hook for navigation
+  const portToRedirect = selectedPortNumber;
+  const directToPortScreen = (userSelectedPortNr) => {
+    navigate("/PortDisplay", {
+      state: {
+        portNr: userSelectedPortNr,
+      },
+    });
+  };
 
   // Handle text area change with character limit (30 characters)
   const handleTextChange = (e) => {
@@ -92,7 +103,7 @@ export default function ChangeUpdatePage() {
       console.error("Fel vid insättning i databasen:", error);
       alert("Ett fel uppstod vid uppdatering av databasen.");
     } else {
-      alert("Data har lagts till framgångsrikt!");
+      alert("Portskärmen uppdaterades!");
       console.log("Inlagt i databasen:", data);
 
       // Reset form fields after successful submission
@@ -103,6 +114,8 @@ export default function ChangeUpdatePage() {
       setSelectedHours(1);
       setSelectedMinutes(0);
       setMessage("");
+      // Navigate to the port screen with the saved port number
+      directToPortScreen(portToRedirect);
     }
   };
 
