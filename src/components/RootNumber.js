@@ -21,9 +21,10 @@ const RootNumber = ({ rootNr }) => {
             font-size: 20vh; /* Large text */
             font-weight: bold;
             text-align: center;
+            margin-left: 10px;
+            margin-right: 10px;
+
             border-radius: 15px; /* More rounded corners */
-            padding: 20px;
-            margin: 20px;
             background: linear-gradient(145deg, #28a745, #1e7e34); /* Gradient for 3D effect */
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4), /* Outer shadow */
                         inset -5px -5px 10px rgba(255, 255, 255, 0.2), /* Inner glow */

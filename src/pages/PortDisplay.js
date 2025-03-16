@@ -113,7 +113,7 @@ export default function PortDisplay() {
           <div className="row h-100 gap-2 justify-content-center">
             {loading ? (
               // Show loading text while fetching data
-              <div className="d-flex align-items-center justify-content-center w-100 h-100">
+              <div className="d-flex align-items-center  justify-content-center w-100 h-100">
                 <p>Loading data...</p>
               </div>
             ) : !portInfo ? (
@@ -124,14 +124,32 @@ export default function PortDisplay() {
             ) : (
               // Display each item in portInfo array
               portInfo.map((item, index) => (
-                <div
-                  key={index}
-                  className="col shadow-lg bg-white rounded-3 border border-light d-flex align-items-center justify-content-center p-3"
-                >
-                  <RootNumber rootNr={item.pos_left} />
-                  <RootNumber rootNr={item.pos_middle} />
-                  <RootNumber rootNr={item.pos_right} />
-                  {/* Component to display root number */}
+                <div key={index} className="row  ">
+                  {[
+                    { label: "VÄNSTER", value: item.pos_left },
+                    { label: "MITTEN", value: item.pos_middle },
+                    { label: "HÖGER", value: item.pos_right },
+                  ].map(({ label, value }, idx) => (
+                    <div key={idx} className="col-4 d-flex flex-column  p-2">
+                      {/* Heading with Fixed Height */}
+                      <div
+                        className="bg-dark text-white p-3 rounded-top text-center  fw-bold d-flex align-items-center justify-content-center"
+                        style={{
+                          fontSize: "clamp(1rem, 5vw, 2rem)",
+                          minHeight: "60px",
+                        }}
+                      >
+                        {label}
+                      </div>
+
+                      {/* Content Box with Equal Height */}
+                      <div className="bg-light shadow p-3 mb-5 bg-body rounded rounded-bottom text-center  flex-grow-1 d-flex align-items-center justify-content-center h-100">
+                        {value !== undefined ? (
+                          <RootNumber rootNr={value} />
+                        ) : null}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ))
             )}

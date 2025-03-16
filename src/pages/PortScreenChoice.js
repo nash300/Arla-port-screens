@@ -17,7 +17,8 @@ export default function PortScreenChoice() {
   return (
     <div className="middle-container d-flex flex-column align-items-center justify-content-center vh-100">
       <div className="container text-center m-3 p-3 vh-100">
-        <h2 className="title-text mb-4">Välj Portskärmen</h2>
+        <h2 className="title-text mb-4">Välj Port</h2>
+        <hr/>
 
         <div className="row g-3 justify-content-center">
           {[...Array(nrOfPorts)].map((_, i) => (
@@ -28,7 +29,7 @@ export default function PortScreenChoice() {
                 onClick={() => portClickHndler(i + 1)}
               >
                 <div className="card-body d-flex align-items-center justify-content-center">
-                  <h3 className="card-title">{i + 1}</h3>
+                  <h3 className="card-title">Port {i + 1}</h3>
                 </div>
               </button>
             </div>

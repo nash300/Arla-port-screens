@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import navigation hook
 
-export default function LogInPage() { // TO-DO implement authentification
+export default function LogInPage() {
   const correctUserName = "Gs1"; // Hardcoded credentials
   const correctPassword = "Start1234";
 
@@ -70,6 +70,17 @@ export default function LogInPage() { // TO-DO implement authentification
             </form>
           </div>
         </div>
+
+        {/* Footer Section for Credits */}
+        <footer className="text-center mt-4">
+          <hr />
+          <p className="text-muted mb-1">
+            Developed by Nadeesha Aravinda
+          </p>
+          <p className="text-muted small">
+            © {new Date().getFullYear()}. All rights reserved.
+          </p>
+        </footer>
       </div>
     </div>
   );
