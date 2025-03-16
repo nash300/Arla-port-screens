@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
 import supabase from "../Utilities/supabase";
 import { useNavigate } from "react-router-dom";
 
-
 export default function ChangeUpdatePage() {
   // State for form inputs
   const [selectedPortNumber, setSelectedPortNumber] = useState("");
@@ -122,11 +121,36 @@ export default function ChangeUpdatePage() {
     }
   };
 
-  const handleDeleteButton = () => {
-    alert("clicked");
+
+  //-----------------------------------------------------------
+  const handleDeleteButton = async () => {
+    if (!selectedPortNumber) return;
+
+    const confirmDelete = window.confirm(
+      "Är du säker på att du vill radera information?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const { error } = await supabase
+        .from("Port_info")
+        .delete()
+        .eq("port_nr", selectedPortNumber);
+
+      if (error) {
+        console.error("Error deleting record:", error);
+        alert("Kunde inte radera posten.");
+      } else {
+        alert("Portdisplayen har uppdaterats framgångsrikt");
+        setSelectedPortNumber(""); // Reset selected port
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
   };
 
-  // Fetch data when component mounts
+
+  // Fetch data when component mounts---------------------------------------
   useEffect(() => {
     const fetchPortData = async () => {
       try {
@@ -153,7 +177,6 @@ export default function ChangeUpdatePage() {
     fetchPortData(); // Run when component mounts
   }, []); // Empty dependency array = runs once when mounted
 
-
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
       <div
@@ -177,9 +200,8 @@ export default function ChangeUpdatePage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
+          {/* *********************  Selecting port number section  ******************************/}
           <div className="border bg-success bg-opacity-25 mb-4 text-center p-3 rounded">
-            {/* Selecting port number section */}
-
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex flex-column">
                 {/* Dropdown Menu */}
@@ -216,7 +238,7 @@ export default function ChangeUpdatePage() {
             </div>
           </div>
 
-          {/* Port Selection Area */}
+          {/******************************* Route number Selection Area *********************************/}
           <div className="mb-4 border p-3 rounded">
             <label className="form-label fw-bold text-dark d-block text-center mb-3">
               Ange ruttnummer:
@@ -264,7 +286,7 @@ export default function ChangeUpdatePage() {
             </div>
           </div>
 
-          {/* Time Limit Selection */}
+          {/*******************************  Time Limit Selection ************************************/}
           <div className="mb-4 text-center border p-3 rounded">
             <label className="form-label fw-bold text-dark">
               Välj tidsgräns (max 5 timmar):
