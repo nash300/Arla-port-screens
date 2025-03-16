@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
 import supabase from "../Utilities/supabase";
 import { useNavigate } from "react-router-dom";
+
 
 export default function ChangeUpdatePage() {
   // State for form inputs
@@ -12,6 +13,9 @@ export default function ChangeUpdatePage() {
   const [message, setMessage] = useState(""); // State for text area input
   const [selectedHours, setSelectedHours] = useState(1); // Hours selection
   const [selectedMinutes, setSelectedMinutes] = useState(0); // Minutes selection
+
+  // Deletes the records in the data base for the shoosen port number
+  const [portList, setPortList] = useState([]);
 
   // Generate hour options (0 - 5)
   const hourOptions = Array.from({ length: 6 }, (_, i) => i);
@@ -118,6 +122,38 @@ export default function ChangeUpdatePage() {
     }
   };
 
+  const handleDeleteButton = () => {
+    alert("clicked");
+  };
+
+  // Fetch data when component mounts
+  useEffect(() => {
+    const fetchPortData = async () => {
+      try {
+        console.log(`Fetching all data from Supabase`);
+
+        // Query Supabase for port data
+        const { data, error } = await supabase
+          .from("Port_info")
+          .select("port_nr");
+
+        if (error) {
+          console.error("Supabase query error:", error);
+        } else {
+          console.log("Updated data received:", data);
+
+          // Convert port numbers to integers before storing
+          setPortList(data.map((item) => parseInt(item.port_nr, 10)));
+        }
+      } catch (error) {
+        console.error("Unexpected error:", error);
+      }
+    };
+
+    fetchPortData(); // Run when component mounts
+  }, []); // Empty dependency array = runs once when mounted
+
+
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
       <div
@@ -141,24 +177,43 @@ export default function ChangeUpdatePage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Dropdown Menu */}
-          <div className="mb-4 text-center border p-3 rounded">
-            <label className="form-label fw-bold text-dark">
-              Välj portnumret:
-            </label>
-            <select
-              value={selectedPortNumber}
-              onChange={(e) => setSelectedPortNumber(e.target.value)}
-              className="form-select border border-success text-dark p-2 mx-auto"
-              style={{ maxWidth: "300px", minWidth: "150px" }}
-            >
-              <option value="">Port</option>
-              {Array.from({ length: 26 }, (_, i) => i + 1).map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
+          <div className="border bg-success bg-opacity-25 mb-4 text-center p-3 rounded">
+            {/* Selecting port number section */}
+
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex flex-column">
+                {/* Dropdown Menu */}
+
+                <label className="form-label fw-bold text-dark text-start">
+                  Välj portnumret:
+                </label>
+                <select
+                  value={selectedPortNumber}
+                  onChange={(e) => setSelectedPortNumber(e.target.value)}
+                  className="form-select border border-success text-dark p-2"
+                  style={{ maxWidth: "300px", minWidth: "150px" }}
+                >
+                  <option value="">Port</option>
+                  {Array.from({ length: 26 }, (_, i) => i + 1).map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Delete Button */}
+              {/* appears only the database has records for the choosen port number */}
+              {portList.includes(Number(selectedPortNumber)) ? (
+                <button
+                  type="button"
+                  onClick={handleDeleteButton}
+                  className="btn btn-danger ms-3"
+                >
+                  Ta bort
+                </button>
+              ) : null}
+            </div>
           </div>
 
           {/* Port Selection Area */}
